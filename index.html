@@ -1,172 +1,229 @@
+index.html:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Uniform Request Form</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-    }
-    select, input {
-      width: 300px;
-      padding: 6px;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-    }
-    #stock-display {
-      font-weight: bold;
-      color: green;
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    label { display: block; margin-top: 10px; }
+    select, input[type="text"], input[type="number"] { width: 100%; padding: 8px; margin-top: 5px; }
+    .stock-info { color: green; font-weight: bold; margin-top: 5px; }
+    button { margin-top: 20px; padding: 10px 20px; }
   </style>
 </head>
 <body>
-
   <h2>Uniform Request Form</h2>
+  <form id="uniformForm">
+    <label>Employee Name
+      <input type="text" id="empName" required />
+    </label>
 
-  <form id="uniform-form">
-    <label for="empCode">Employee Code:</label>
-    <input type="text" id="empCode" required />
+    <label>Employee Code
+      <input type="text" id="empCode" required />
+    </label>
 
-    <label for="empName">Employee Name:</label>
-    <input type="text" id="empName" required />
+    <label>Uniform Barcode
+      <select id="barcode" required></select>
+      <div class="stock-info" id="stockDisplay"></div>
+    </label>
 
-    <label for="barcode">Uniform Barcode:</label>
-    <select id="barcode" required></select>
-    <div>Current Stock: <span id="stock-display">-</span></div>
+    <label>Quantity
+      <input type="number" id="qty" min="1" required />
+    </label>
 
-    <label for="qty">Quantity:</label>
-    <input type="number" id="qty" min="1" required />
+    <label>Region
+      <select id="region" required></select>
+    </label>
 
-    <label for="region">Region:</label>
-    <select id="region" required>
-      <option value="">Select Region</option>
-    </select>
-
-    <label for="store">Store:</label>
-    <select id="store" required>
-      <option value="">Select Store</option>
-    </select>
+    <label>Store
+      <select id="store" required></select>
+    </label>
 
     <button type="submit">Submit</button>
   </form>
 
+  <div id="message"></div>
+
   <script>
-    const form = document.getElementById("uniform-form");
-    const regionSelect = document.getElementById("region");
-    const storeSelect = document.getElementById("store");
-    const barcodeSelect = document.getElementById("barcode");
-    const stockDisplay = document.getElementById("stock-display");
+    const stockURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vST2H4FYdTFxPnJQq04pDiTtBA_8lDyJA_Ik7eKt6uVv9XwHTRwgs7UdoDBL_LBiJ6Iq2zZc-vK1BSx/pub?gid=901085179&single=true&output=csv';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbywF8zHLDEpX0TrQT4rkAjUwiTONz4W_DjfdTjWlTmd5ode0M7tDHJkTlAt25lh1f3J/exec';
+    const storeURL = 'store.json';
 
-    const stockURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vST2H4FYdTFxPnJQq04pDiTtBA_8lDyJA_Ik7eKt6uVv9XwHTRwgs7UdoDBL_LBiJ6Iq2zZc-vK1BSx/pub?gid=901085179&single=true&output=csv";
-    const scriptURL = "https://script.google.com/macros/s/AKfycbywF8zHLDEpX0TrQT4rkAjUwiTONz4W_DjfdTjWlTmd5ode0M7tDHJkTlAt25lh1f3J/exec";
-    const storeURL = "store.json";
+    let stockData = {};
 
-    let stockData = [];
-    let storeData = {};
-
-    async function loadStockCSV() {
+    async function fetchStock() {
       const res = await fetch(stockURL);
-      const text = await res.text();
-      const lines = text.trim().split("\n").map(row => row.split(","));
-      const header = lines[0];
-      const barcodeIndex = header.indexOf("Barcode");
-      const stockIndex = header.indexOf("Stock");
-
-      stockData = lines.slice(1).map(r => ({
-        barcode: r[barcodeIndex].trim(),
-        stock: parseInt(r[stockIndex])
-      }));
-
-      barcodeSelect.innerHTML = `<option value="">Select Barcode</option>`;
-      stockData.forEach(item => {
-        const opt = document.createElement("option");
-        opt.value = item.barcode;
-        opt.textContent = item.barcode;
-        barcodeSelect.appendChild(opt);
+      const csv = await res.text();
+      const rows = csv.trim().split('\n').slice(1);
+      const barcodeSelect = document.getElementById('barcode');
+      barcodeSelect.innerHTML = '<option value="">-- Select Barcode --</option>';
+      rows.forEach(row => {
+        const [barcode, stock] = row.split(',');
+        stockData[barcode] = parseInt(stock);
+        barcodeSelect.innerHTML += `<option value="${barcode}">${barcode}</option>`;
       });
     }
 
-    async function loadStoreJSON() {
+    async function fetchStores() {
       const res = await fetch(storeURL);
-      storeData = await res.json();
-
-      regionSelect.innerHTML = `<option value="">Select Region</option>`;
-      Object.keys(storeData).forEach(region => {
-        const opt = document.createElement("option");
-        opt.value = region;
-        opt.textContent = region;
-        regionSelect.appendChild(opt);
+      const storeData = await res.json();
+      const regionSelect = document.getElementById('region');
+      regionSelect.innerHTML = '<option value="">--Select Region--</option>';
+      for (const region in storeData) {
+        regionSelect.innerHTML += `<option value="${region}">${region}</option>`;
+      }
+      regionSelect.addEventListener('change', () => {
+        const storeSelect = document.getElementById('store');
+        const selectedRegion = regionSelect.value;
+        storeSelect.innerHTML = '';
+        if (storeData[selectedRegion]) {
+          storeData[selectedRegion].forEach(store => {
+            storeSelect.innerHTML += `<option value="${store}">${store}</option>`;
+          });
+        }
       });
     }
 
-    barcodeSelect.addEventListener("change", () => {
-      const barcode = barcodeSelect.value;
-      const match = stockData.find(s => s.barcode === barcode);
-      stockDisplay.textContent = match ? match.stock : "-";
+    document.addEventListener('DOMContentLoaded', async () => {
+      await fetchStock();
+      await fetchStores();
+
+      document.getElementById('barcode').addEventListener('change', () => {
+        const selected = document.getElementById('barcode').value;
+        const available = stockData[selected] || 0;
+        const stockDisplay = document.getElementById('stockDisplay');
+        if (available === 0) {
+          stockDisplay.textContent = 'Out of stock';
+          stockDisplay.style.color = 'red';
+        } else {
+          stockDisplay.textContent = `Available: ${available}`;
+          stockDisplay.style.color = 'green';
+        }
+      });
     });
 
-    regionSelect.addEventListener("change", () => {
-      const region = regionSelect.value;
-      storeSelect.innerHTML = `<option value="">Select Store</option>`;
-      if (storeData[region]) {
-        const branches = Object.values(storeData[region]).flat();
-        branches.forEach(store => {
-          const opt = document.createElement("option");
-          opt.value = store;
-          opt.textContent = store;
-          storeSelect.appendChild(opt);
-        });
-      }
-    });
-
-    form.addEventListener("submit", async (e) => {
+    document.getElementById('uniformForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const barcode = barcodeSelect.value;
-      const qty = parseInt(document.getElementById("qty").value);
-      const current = stockData.find(i => i.barcode === barcode);
+      const barcode = document.getElementById('barcode').value;
+      const qty = parseInt(document.getElementById('qty').value);
+      const available = stockData[barcode] || 0;
+      const message = document.getElementById('message');
 
-      if (!current) return alert("Invalid barcode.");
-      if (qty > current.stock) return alert("Insufficient stock.");
+      if (available === 0) {
+        message.textContent = '❌ Cannot submit: Out of stock';
+        message.style.color = 'red';
+        return;
+      }
+      if (qty > available) {
+        message.textContent = `❌ Cannot submit: Only ${available} left.`;
+        message.style.color = 'red';
+        return;
+      }
 
       const payload = {
-        empCode: document.getElementById("empCode").value,
-        empName: document.getElementById("empName").value,
+        empName: document.getElementById('empName').value,
+        empCode: document.getElementById('empCode').value,
         barcode,
         qty,
-        region: regionSelect.value,
-        store: storeSelect.value
+        region: document.getElementById('region').value,
+        store: document.getElementById('store').value
       };
 
-      const formData = new FormData();
-      formData.append("data", JSON.stringify(payload));
-
       try {
-        const res = await fetch(scriptURL, { method: "POST", body: formData });
-        const json = await res.json();
+        const res = await fetch(scriptURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
 
-        if (json.success) {
-          alert("Submitted successfully!");
-          await loadStockCSV(); // refresh updated stock
-          barcodeSelect.value = barcode;
-          barcodeSelect.dispatchEvent(new Event("change")); // re-show updated stock
+        const result = await res.json();
+        if (result.success) {
+          message.textContent = '✅ Submitted successfully';
+          message.style.color = 'green';
+          setTimeout(() => window.location.reload(), 1500);
         } else {
-          alert("Error: " + json.message);
+          message.textContent = '❌ Error: ' + result.message;
+          message.style.color = 'red';
         }
       } catch (err) {
-        alert("Network error: " + err.message);
+        console.error(err);
+        message.textContent = '❌ Error submitting the form';
+        message.style.color = 'red';
       }
     });
-
-    loadStockCSV();
-    loadStoreJSON();
   </script>
 </body>
 </html>
+
+
+Code.gs:
+
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+
+    // your sheet logic...
+    const ss = SpreadsheetApp.openById("YOUR_SHEET_ID_HERE");
+    const stockSheet = ss.getSheetByName("Stock");
+    const dataSheet = ss.getSheetByName("Data");
+
+    const barcode = data.barcode;
+    const qty = parseInt(data.qty, 10);
+
+    const stockData = stockSheet.getDataRange().getValues();
+    let updated = false;
+
+    for (let i = 1; i < stockData.length; i++) {
+      if (stockData[i][0] === barcode) {
+        let currentStock = stockData[i][1];
+        if (currentStock >= qty) {
+          stockSheet.getRange(i + 1, 2).setValue(currentStock - qty);
+          updated = true;
+        } else {
+          return ContentService
+            .createTextOutput(JSON.stringify({ success: false, message: "Insufficient stock" }))
+            .setMimeType(ContentService.MimeType.JSON)
+            .setHeader("Access-Control-Allow-Origin", "*");
+        }
+        break;
+      }
+    }
+
+    if (updated) {
+      dataSheet.appendRow([
+        new Date(),
+        data.empName,
+        data.empCode,
+        data.barcode,
+        data.qty,
+        data.region,
+        data.store
+      ]);
+
+      return ContentService
+        .createTextOutput(JSON.stringify({ success: true }))
+        .setMimeType(ContentService.MimeType.JSON)
+        .setHeader("Access-Control-Allow-Origin", "*");
+    } else {
+      return ContentService
+        .createTextOutput(JSON.stringify({ success: false, message: "Barcode not found" }))
+        .setMimeType(ContentService.MimeType.JSON)
+        .setHeader("Access-Control-Allow-Origin", "*");
+    }
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, error: err.message }))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader("Access-Control-Allow-Origin", "*");
+  }
+}
+function doGet(e) {
+  return ContentService
+    .createTextOutput("GET Request Working")
+    .setMimeType(ContentService.MimeType.TEXT)
+    .setHeader("Access-Control-Allow-Origin", "*");
+}
