@@ -1,138 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Uniform Request Form</title>
   <style>
-    body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
-    label { display: block; margin-top: 10px; }
-    select, input[type="text"], input[type="number"] { width: 100%; padding: 8px; }
-    #stockDisplay { margin: 5px 0; font-weight: bold; color: green; }
-    button { margin-top: 15px; padding: 10px 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, button {
+      padding: 8px;
+      margin-top: 5px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .stock-info {
+      margin-top: 5px;
+      color: green;
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h2>Uniform Request Form</h2>
-
   <form id="uniformForm">
-    <label>Employee Name</label>
-    <input type="text" id="empName" required>
+    <label for="name">Employee Name:</label>
+    <input type="text" id="name" required />
 
-    <label>Employee Code</label>
-    <input type="text" id="empCode" required>
+    <label for="code">Employee Code:</label>
+    <input type="text" id="code" required />
 
-    <label>Uniform Barcode</label>
+    <label for="barcode">Uniform Barcode:</label>
     <select id="barcode" required></select>
-    <div id="stockDisplay"></div>
+    <div class="stock-info" id="stockInfo"></div>
 
-    <label>Quantity</label>
-    <input type="number" id="qty" min="1" required>
+    <label for="qty">Qty:</label>
+    <input type="number" id="qty" required min="1" />
 
-    <label>Region</label>
+    <label for="region">Region:</label>
     <select id="region" required></select>
 
-    <label>Store</label>
+    <label for="store">Store:</label>
     <select id="store" required></select>
 
     <button type="submit">Submit</button>
+    <div id="message"></div>
   </form>
 
-  <div id="resultMsg" style="margin-top: 20px;"></div>
-
   <script>
-    const stockURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vST2H4FYdTFxPnJQq04pDiTtBA_8lDyJA_Ik7eKt6uVv9XwHTRwgs7UdoDBL_LBiJ6Iq2zZc-vK1BSx/pub?gid=901085179&single=true&output=csv'; // ← Public CSV link from Google Sheet
-    const storeURL = 'store.json';   // ← store.json in same folder
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyc22ExPknJN14z3CfYVn_PTlu_OacQfNmqeZsr50qeFrAKbnEHHaH7k5Rf22uWTdOX/exec'; // ← Google Apps Script Web App URL
+    const stockURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vST2H4FYdTFxPnJQq04pDiTtBA_8lDyJA_Ik7eKt6uVv9XwHTRwgs7UdoDBL_LBiJ6Iq2zZc-vK1BSx/pub?gid=901085179&single=true&output=csv"; // update this
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyc22ExPknJN14z3CfYVn_PTlu_OacQfNmqeZsr50qeFrAKbnEHHaH7k5Rf22uWTdOX/exec"; // update this
+    const storeURL = "store.json";
 
-    let stockMap = {};
+    const stockMap = {};
 
     async function fetchStock() {
-      const res = await fetch(stockURL);
-      const csv = await res.text();
-      const lines = csv.split('\n').slice(1); // skip header
-      const barcodeSelect = document.getElementById('barcode');
-      stockMap = {};
+      const response = await fetch(stockURL);
+      const data = await response.text();
+      const rows = data.split("\n");
 
+      const barcodeSelect = document.getElementById("barcode");
       barcodeSelect.innerHTML = '<option value="">--Select Barcode--</option>';
-      lines.forEach(row => {
-        const [barcode, qty] = row.split(',');
-        if (barcode && qty) {
-          stockMap[barcode.trim()] = parseInt(qty.trim());
-          barcodeSelect.innerHTML += `<option value="${barcode.trim()}">${barcode.trim()}</option>`;
-        }
-      });
 
-      barcodeSelect.addEventListener('change', () => {
+      for (let i = 1; i < rows.length; i++) {
+        const [barcode, qty] = rows[i].split(",");
+        if (barcode && !isNaN(qty)) {
+          const quantity = parseInt(qty);
+          stockMap[barcode] = quantity;
+          if (quantity > 0) {
+            barcodeSelect.innerHTML += `<option value="${barcode}">${barcode}</option>`;
+          }
+        }
+      }
+
+      barcodeSelect.addEventListener("change", () => {
         const selected = barcodeSelect.value;
-        const stockQty = stockMap[selected] ?? 0;
-        document.getElementById('stockDisplay').textContent = `Available: ${stockQty}`;
+        const stock = stockMap[selected] || 0;
+        const stockInfo = document.getElementById("stockInfo");
+        stockInfo.textContent = stock > 0 ? `Available Stock: ${stock}` : "❌ Out of Stock";
       });
     }
 
     async function fetchStores() {
-      const res = await fetch(storeURL);
-      const storeData = await res.json();
-      const regionSelect = document.getElementById('region');
-      const storeSelect = document.getElementById('store');
-
+      const response = await fetch(storeURL);
+      const storeData = await response.json();
+      const regionSelect = document.getElementById("region");
       regionSelect.innerHTML = '<option value="">--Select Region--</option>';
+
       for (let region in storeData) {
         regionSelect.innerHTML += `<option value="${region}">${region}</option>`;
       }
 
-      regionSelect.addEventListener('change', () => {
+      regionSelect.addEventListener("change", () => {
         const selectedRegion = regionSelect.value;
-        storeSelect.innerHTML = '';
-        if (storeData[selectedRegion]) {
-          storeData[selectedRegion].forEach(store => {
-            storeSelect.innerHTML += `<option value="${store}">${store}</option>`;
-          });
-        }
+        const storeSelect = document.getElementById("store");
+        storeSelect.innerHTML = '<option value="">--Select Store--</option>';
+        storeData[selectedRegion].forEach(store => {
+          storeSelect.innerHTML += `<option value="${store}">${store}</option>`;
+        });
       });
     }
 
-    document.getElementById('uniformForm').addEventListener('submit', async (e) => {
+    document.getElementById("uniformForm").addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const barcode = document.getElementById('barcode').value;
-      const qty = parseInt(document.getElementById('qty').value);
-      const available = stockMap[barcode];
+      const barcode = document.getElementById("barcode").value;
+      const qty = parseInt(document.getElementById("qty").value);
 
-      if (qty > available) {
-        alert('Requested quantity exceeds available stock.');
+      if (!barcode || isNaN(qty) || stockMap[barcode] === undefined || stockMap[barcode] < qty) {
+        document.getElementById("message").innerHTML = `<div class='error'>❌ Not enough stock.</div>`;
         return;
       }
 
-      const data = {
-        name: document.getElementById('empName').value,
-        code: document.getElementById('empCode').value,
-        barcode: barcode,
-        qty: qty,
-        region: document.getElementById('region').value,
-        store: document.getElementById('store').value
+      const payload = {
+        name: document.getElementById("name").value,
+        code: document.getElementById("code").value,
+        barcode,
+        qty,
+        region: document.getElementById("region").value,
+        store: document.getElementById("store").value
       };
 
-      try {
-        const response = await fetch(scriptURL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
+      const response = await fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" }
+      });
 
-        document.getElementById('resultMsg').textContent = '✅ Submitted successfully!';
-        fetchStock(); // Refresh stock live
-        document.getElementById('uniformForm').reset();
-        document.getElementById('stockDisplay').textContent = '';
-      } catch (err) {
-        document.getElementById('resultMsg').textContent = '❌ Submission failed.';
-        console.error(err);
-      }
+      const result = await response.text();
+      document.getElementById("message").innerHTML = `<div>${result}</div>`;
+
+      setTimeout(() => location.reload(), 1500); // Reload after 1.5 sec
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      fetchStores();
+    document.addEventListener("DOMContentLoaded", () => {
       fetchStock();
+      fetchStores();
     });
   </script>
 </body>
