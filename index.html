@@ -131,10 +131,12 @@
       };
 
       try {
-       const res = await fetch(scriptURL, {
+       const formData = new FormData();
+formData.append("data", JSON.stringify(payload));
+
+const res = await fetch(scriptURL, {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(payload)
+  body: formData
 });
 
         const result = await res.json();
