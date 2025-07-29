@@ -1,140 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Uniform Request Form</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; max-width: 600px; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    select, input { width: 100%; padding: 8px; margin-top: 5px; }
-    .stock-display { font-weight: bold; color: green; margin-top: 5px; }
-    button { margin-top: 20px; padding: 10px 20px; cursor: pointer; }
-    #message { margin-top: 20px; font-weight: bold; }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    label { display: block; margin-top: 15px; }
+    input, select, button { width: 100%; padding: 8px; margin-top: 5px; }
+    #stockDisplay { font-weight: bold; margin-top: 5px; }
+    .message { margin-top: 15px; padding: 10px; border-radius: 5px; }
+    .success { background-color: #d4edda; color: #155724; }
+    .error { background-color: #f8d7da; color: #721c24; }
   </style>
 </head>
 <body>
   <h2>Uniform Request Form</h2>
-
   <form id="uniformForm">
-    <label>Employee Name:
-      <input type="text" name="empName" required />
-    </label>
-    
-    <label>Employee Code:
-      <input type="text" name="empCode" required />
-    </label>
+    <label for="empName">Employee Name</label>
+    <input type="text" id="empName" required>
 
-    <label>Uniform Barcode:
-      <select name="barcode" id="barcodeSelect" required></select>
-      <div id="stockInfo" class="stock-display"></div>
-    </label>
+    <label for="empCode">Employee Code</label>
+    <input type="text" id="empCode" required>
 
-    <label>Quantity:
-      <input type="number" name="qty" id="qty" min="1" required />
-    </label>
+    <label for="barcode">Uniform Barcode</label>
+    <select id="barcode" required></select>
+    <div id="stockDisplay"></div>
 
-    <label>Region:
-      <select name="region" id="regionSelect" required></select>
-    </label>
+    <label for="qty">Quantity</label>
+    <input type="number" id="qty" min="1" required>
 
-    <label>Store:
-      <select name="store" id="storeSelect" required></select>
-    </label>
+    <label for="region">Region</label>
+    <select id="region" required></select>
+
+    <label for="store">Store</label>
+    <select id="store" required></select>
 
     <button type="submit">Submit</button>
   </form>
 
-  <div id="message"></div>
+  <div id="message" class="message" style="display:none;"></div>
 
   <script>
-    const stockURL = 'stock.csv';
-    const storeDataURL = 'store.json';
-    const submitURL = 'https://script.google.com/macros/s/AKfycbyc22ExPknJN14z3CfYVn_PTlu_OacQfNmqeZsr50qeFrAKbnEHHaH7k5Rf22uWTdOX/exec'; // 🔁 Replace this
+    const submitURL = 'https://script.google.com/macros/s/AKfycbyc22ExPknJN14z3CfYVn_PTlu_OacQfNmqeZsr50qeFrAKbnEHHaH7k5Rf22uWTdOX/exec'; // 🔁 Replace this with your deployed Apps Script Web App URL
 
-    let stockMap = {};
+    let stockData = {};
+    let storeData = {};
 
-    // Load stock.csv
-    fetch(stockURL)
-      .then(response => response.text())
-      .then(data => {
-        const rows = data.trim().split('\n').slice(1);
-        rows.forEach(row => {
-          const [barcode, item, stock] = row.split(',');
-          stockMap[barcode] = { item, stock: parseInt(stock) };
-          const opt = document.createElement('option');
-          opt.value = barcode;
-          opt.text = `${barcode} - ${item}`;
-          document.getElementById('barcodeSelect').appendChild(opt);
-        });
+    async function loadStock() {
+      const response = await fetch('stock.json');
+      const data = await response.json();
+      stockData = data;
+      const barcodeSelect = document.getElementById('barcode');
+      barcodeSelect.innerHTML = '';
+      Object.entries(data).forEach(([barcode, stock]) => {
+        const option = document.createElement('option');
+        option.value = barcode;
+        option.textContent = `${barcode}`;
+        barcodeSelect.appendChild(option);
       });
+      updateStockDisplay();
+    }
 
-    // Show stock when barcode changes
-    document.getElementById('barcodeSelect').addEventListener('change', function () {
-      const selected = this.value;
-      const info = stockMap[selected];
-      document.getElementById('stockInfo').innerText = info ? `Available Stock: ${info.stock}` : '';
+    async function loadStores() {
+      const response = await fetch('store.json');
+      storeData = await response.json();
+      const regionSelect = document.getElementById('region');
+      regionSelect.innerHTML = '<option value="">Select Region</option>';
+      Object.keys(storeData).forEach(region => {
+        const option = document.createElement('option');
+        option.value = region;
+        option.textContent = region;
+        regionSelect.appendChild(option);
+      });
+    }
+
+    function updateStockDisplay() {
+      const barcode = document.getElementById('barcode').value;
+      const stock = stockData[barcode] || 0;
+      document.getElementById('stockDisplay').textContent = `Available Stock: ${stock}`;
+    }
+
+    document.getElementById('barcode').addEventListener('change', updateStockDisplay);
+
+    document.getElementById('region').addEventListener('change', () => {
+      const region = document.getElementById('region').value;
+      const storeSelect = document.getElementById('store');
+      storeSelect.innerHTML = '<option value="">Select Store</option>';
+      (storeData[region] || []).forEach(store => {
+        const option = document.createElement('option');
+        option.value = store;
+        option.textContent = store;
+        storeSelect.appendChild(option);
+      });
     });
 
-    // Load store.json
-    fetch(storeDataURL)
-      .then(res => res.json())
-      .then(data => {
-        const regions = [...new Set(data.map(r => r.Region))];
-        regions.forEach(region => {
-          const opt = document.createElement('option');
-          opt.value = region;
-          opt.text = region;
-          document.getElementById('regionSelect').appendChild(opt);
-        });
-
-        document.getElementById('regionSelect').addEventListener('change', function () {
-          const selectedRegion = this.value;
-          const stores = data.filter(r => r.Region === selectedRegion).map(r => r.Store);
-          const storeSelect = document.getElementById('storeSelect');
-          storeSelect.innerHTML = '';
-          stores.forEach(store => {
-            const opt = document.createElement('option');
-            opt.value = store;
-            opt.text = store;
-            storeSelect.appendChild(opt);
-          });
-        });
-      });
-
-    // Handle submit
-    document.getElementById('uniformForm').addEventListener('submit', function (e) {
+    document.getElementById('uniformForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const formData = new FormData(this);
-      const barcode = formData.get('barcode');
-      const qty = parseInt(formData.get('qty'));
+      const empName = document.getElementById('empName').value.trim();
+      const empCode = document.getElementById('empCode').value.trim();
+      const barcode = document.getElementById('barcode').value;
+      const qty = parseInt(document.getElementById('qty').value);
+      const region = document.getElementById('region').value;
+      const store = document.getElementById('store').value;
 
-      if (!stockMap[barcode] || stockMap[barcode].stock < qty) {
-        document.getElementById('message').innerText = '❌ Not enough stock available!';
+      if (qty > (stockData[barcode] || 0)) {
+        showMessage("❌ Not enough stock available.", true);
         return;
       }
 
-      const payload = {};
-      formData.forEach((val, key) => payload[key] = val);
+      const payload = { empName, empCode, barcode, qty, region, store };
 
-      fetch(submitURL, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'application/json' }
-      })
-        .then(res => res.text())
-        .then(response => {
-          document.getElementById('message').innerText = '✅ Submitted successfully!';
-          stockMap[barcode].stock -= qty;
-          document.getElementById('stockInfo').innerText = `Available Stock: ${stockMap[barcode].stock}`;
-          document.getElementById('uniformForm').reset();
-        })
-        .catch(error => {
-          document.getElementById('message').innerText = '⚠️ Error submitting the form.';
-          console.error(error);
+      try {
+        const response = await fetch(submitURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
         });
+
+        const result = await response.text();
+        if (response.ok && result === 'Success') {
+          showMessage("✅ Form submitted successfully!", false);
+          stockData[barcode] -= qty; // Real-time stock update on page
+          updateStockDisplay();
+          document.getElementById('uniformForm').reset();
+        } else {
+          showMessage("⚠️ Error submitting the form.", true);
+        }
+      } catch (err) {
+        showMessage("⚠️ Error submitting the form.", true);
+        console.error(err);
+      }
     });
+
+    function showMessage(msg, isError) {
+      const msgBox = document.getElementById('message');
+      msgBox.textContent = msg;
+      msgBox.className = `message ${isError ? 'error' : 'success'}`;
+      msgBox.style.display = 'block';
+    }
+
+    loadStock();
+    loadStores();
   </script>
 </body>
 </html>
