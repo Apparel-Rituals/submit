@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Uniform Request Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; max-width: 600px; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    select, input { width: 100%; padding: 8px; margin-top: 5px; }
+    .stock-display { font-weight: bold; color: green; margin-top: 5px; }
+    button { margin-top: 20px; padding: 10px 20px; cursor: pointer; }
+    #message { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Uniform Request Form</h2>
+
+  <form id="uniformForm">
+    <label>Employee Name:
+      <input type="text" name="empName" required />
+    </label>
+    
+    <label>Employee Code:
+      <input type="text" name="empCode" required />
+    </label>
+
+    <label>Uniform Barcode:
+      <select name="barcode" id="barcodeSelect" required></select>
+      <div id="stockInfo" class="stock-display"></div>
+    </label>
+
+    <label>Quantity:
+      <input type="number" name="qty" id="qty" min="1" required />
+    </label>
+
+    <label>Region:
+      <select name="region" id="regionSelect" required></select>
+    </label>
+
+    <label>Store:
+      <select name="store" id="storeSelect" required></select>
+    </label>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="message"></div>
+
+  <script>
+    const stockURL = 'stock.csv';
+    const storeDataURL = 'store.json';
+    const submitURL = 'https://script.google.com/macros/s/AKfycbyc22ExPknJN14z3CfYVn_PTlu_OacQfNmqeZsr50qeFrAKbnEHHaH7k5Rf22uWTdOX/exec'; // 🔁 Replace this
+
+    let stockMap = {};
+
+    // Load stock.csv
+    fetch(stockURL)
+      .then(response => response.text())
+      .then(data => {
+        const rows = data.trim().split('\n').slice(1);
+        rows.forEach(row => {
+          const [barcode, item, stock] = row.split(',');
+          stockMap[barcode] = { item, stock: parseInt(stock) };
+          const opt = document.createElement('option');
+          opt.value = barcode;
+          opt.text = `${barcode} - ${item}`;
+          document.getElementById('barcodeSelect').appendChild(opt);
+        });
+      });
+
+    // Show stock when barcode changes
+    document.getElementById('barcodeSelect').addEventListener('change', function () {
+      const selected = this.value;
+      const info = stockMap[selected];
+      document.getElementById('stockInfo').innerText = info ? `Available Stock: ${info.stock}` : '';
+    });
+
+    // Load store.json
+    fetch(storeDataURL)
+      .then(res => res.json())
+      .then(data => {
+        const regions = [...new Set(data.map(r => r.Region))];
+        regions.forEach(region => {
+          const opt = document.createElement('option');
+          opt.value = region;
+          opt.text = region;
+          document.getElementById('regionSelect').appendChild(opt);
+        });
+
+        document.getElementById('regionSelect').addEventListener('change', function () {
+          const selectedRegion = this.value;
+          const stores = data.filter(r => r.Region === selectedRegion).map(r => r.Store);
+          const storeSelect = document.getElementById('storeSelect');
+          storeSelect.innerHTML = '';
+          stores.forEach(store => {
+            const opt = document.createElement('option');
+            opt.value = store;
+            opt.text = store;
+            storeSelect.appendChild(opt);
+          });
+        });
+      });
+
+    // Handle submit
+    document.getElementById('uniformForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const barcode = formData.get('barcode');
+      const qty = parseInt(formData.get('qty'));
+
+      if (!stockMap[barcode] || stockMap[barcode].stock < qty) {
+        document.getElementById('message').innerText = '❌ Not enough stock available!';
+        return;
+      }
+
+      const payload = {};
+      formData.forEach((val, key) => payload[key] = val);
+
+      fetch(submitURL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(res => res.text())
+        .then(response => {
+          document.getElementById('message').innerText = '✅ Submitted successfully!';
+          stockMap[barcode].stock -= qty;
+          document.getElementById('stockInfo').innerText = `Available Stock: ${stockMap[barcode].stock}`;
+          document.getElementById('uniformForm').reset();
+        })
+        .catch(error => {
+          document.getElementById('message').innerText = '⚠️ Error submitting the form.';
+          console.error(error);
+        });
+    });
+  </script>
+</body>
+</html>
