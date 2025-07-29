@@ -11,11 +11,11 @@
     }
     label {
       display: block;
-      margin: 10px 0 5px;
+      margin-top: 10px;
     }
     select, input {
-      padding: 6px;
       width: 300px;
+      padding: 6px;
     }
     button {
       margin-top: 15px;
@@ -154,9 +154,9 @@
 
         if (json.success) {
           alert("Submitted successfully!");
-          await loadStockCSV(); // refresh stock from sheet
+          await loadStockCSV(); // refresh updated stock
           barcodeSelect.value = barcode;
-          barcodeSelect.dispatchEvent(new Event("change"));
+          barcodeSelect.dispatchEvent(new Event("change")); // re-show updated stock
         } else {
           alert("Error: " + json.message);
         }
