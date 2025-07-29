@@ -131,11 +131,11 @@
       };
 
       try {
-        const res = await fetch(scriptURL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+       const res = await fetch(scriptURL, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(payload)
+});
 
         const result = await res.json();
         if (result.success) {
