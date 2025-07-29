@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Force refresh on page load to avoid cache -->
+  <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Prevent caching and force fresh load -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-
-
-
-  
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ 
   <title>Uniform Request Form</title>
   <style>
     body {
@@ -209,6 +207,9 @@
           await loadStockCSV(); // Refresh updated stock
           barcodeSelect.value = barcode;
           barcodeSelect.dispatchEvent(new Event("change")); // Update stock display
+           setTimeout(() => {
+    window.location.reload();
+  }, 1000); // Refresh page after 1 sec
         } else {
           alert("Error: " + json.message);
         }
