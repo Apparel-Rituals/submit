@@ -60,6 +60,13 @@
       }
     }
 
+    fetch('store.json')
+  .then(response => response.json())
+  .then(data => {
+    regionStoreData = data;
+    populateRegionDropdown();
+  });
+    
     async function fetchStores() {
       const response = await fetch(storeURL);
       const storeData = await response.json();
