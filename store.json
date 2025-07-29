@@ -1,5 +1,8 @@
 {
-  "Kuwait": ["Salmiya", "Fahaheel"],
-  "UAE": ["Dubai", "Sharjah"],
-  "KSA": ["Riyadh", "Jeddah"]
+  "Kuwait": ["Salmiya", "Fahaheel", "Hawally"],
+  "UAE": ["Dubai", "Abu Dhabi"],
+  "KSA": ["Riyadh", "Jeddah"],
+  "Qatar": ["Doha"],
+  "Bahrain": ["Manama"],
+  "Oman": ["Muscat"]
 }
