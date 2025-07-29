@@ -1,266 +1,209 @@
-[
- {
-   "Region": "Bahrain",
-   "Store": "44567 : RI CITY CENTRE BAHRAIN"
- },
- {
-   "Region": "Bahrain",
-   "Store": "76522 : RI MARASSI GALLERIA MALL-BAHRAIN"
- },
- {
-   "Region": "Bahrain",
-   "Store": "76959 : RI AVENUES MALL-BAHRAIN"
- },
- {
-   "Region": "Kuwait",
-   "Store": "85133 : RI AVENUE MALL-KUWAIT"
- },
- {
-   "Region": "Kuwait",
-   "Store": "15036 : RI 360 MALL"
- },
- {
-   "Region": "Kuwait",
-   "Store": "35895 : RI MARINA MALL-KUWAIT"
- },
- {
-   "Region": "Kuwait",
-   "Store": "54626 : RI ALKOUT MALL"
- },
- {
-   "Region": "Kuwait",
-   "Store": "95561 : RI ASSIMA MALL"
- },
- {
-   "Region": "Kuwait",
-   "Store": "25366 : RI GATE MALL"
- },
- {
-   "Region": "Kuwait",
-   "Store": "76164 : RI AL KHIRAN MALL"
- },
- {
-   "Region": "Kuwait",
-   "Store": "16321 : RI THE WAREHOUSE MALL -KUWAIT"
- },
- {
-   "Region": "Kuwait",
-   "Store": "96617 : RI THE PROMINADE MALL"
- },
- {
-   "Region": "Oman",
-   "Store": "45013 : RI MALL OF OMAN"
- },
- {
-   "Region": "Oman",
-   "Store": "44654 : RI CITY CENTRE MUSCAT"
- },
- {
-   "Region": "Oman",
-   "Store": "63868 : RI MUSCAT GRAND MALL"
- },
- {
-   "Region": "Oman",
-   "Store": "26883 : RI AVENUE MALL-OMAN"
- },
- {
-   "Region": "Qatar",
-   "Store": "64653 : RI DOHA FESTIVAL CITY"
- },
- {
-   "Region": "Qatar",
-   "Store": "16106 : RI MALL OF QATAR 2"
- },
- {
-   "Region": "Qatar",
-   "Store": "15527 : RI VENDOME MALL DOHA"
- },
- {
-   "Region": "Qatar",
-   "Store": "34481 : RI VILLAGIO MALL"
- },
- {
-   "Region": "Qatar",
-   "Store": "83114 : RI  LAGOONA MALL"
- },
- {
-   "Region": "Qatar",
-   "Store": "93919 : RI LANDMARK MALL"
- },
- {
-   "Region": "Qatar",
-   "Store": "26479 : RI Doha Mall"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "15492 : RI MALL OF DHAHRAN"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "35494 : RI NAKHEEL MALL-RIYADH"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "35493 : RI HAMRA MALL RIYADH"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "46088 : RI RIYADH PARK MALL"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "75680 : RI KHALEEJ MALL-RIYADH"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "75473 : RI JEDDAH PARK-JEDDAH"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "15474 : RI GALLERIA MALL RIYADH"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "15986 : RI RASHID MALL - ABHA"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "76456 : RI RED SEA MALL"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "76507 : RI THE VILLAGE MALL-JEDDAH"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "46695 : RI RIYADH PARK MALL 2"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "66653 : RI NAKHEEL MALL-DAMMAM"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "25908 : RI GRANADA MALL"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "36681 : RI U WALK-JEDDAH"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "76730 : RI PANORAMA MALL-RIYADH"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "46509 : RI SOLITAIRE MALL-RIYADH"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "56934 : RI MAKKAH MALL"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "36943 : RI MALL OF ARABIA"
- },
- {
-   "Region": "Saudi Arabia",
-   "Store": "36928 : RI FAISALIAH MALL"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "84939 : RI DUBAI MALL"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "94585 : RI YAS MALL"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "54459 : RI BAWADI MALL"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "34460 : RI MIRDIFF CITY CENTRE"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "61784 : RI MALL OF THE EMIRATES"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "35766 : RI DUBAI HILLS"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "94458 : RI DUBAI OUTLET MALL"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "74541 : RI MARINA MALL-DUBAI"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "21158 : RI MARINA MALL-AXD"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "64457 : RI IBN BATUTA MALL"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "64540 : RI ARABIAN CENTRE"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "24597 : RI WORLD TRADE CENTER-ABU DHABI"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "24559 : RI AJMAN CITY CENTRE"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "16689 : RI AL JIMMI MALL"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "26070 : RI REEM MALL-ABU DHABI"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "36687 : RI DEIRA CITY CENTRE"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "96686 : RI NAKHEEL MALL DUBAI"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "56791 : RI FORSAN CENTRAL MALL-ABU DHABI"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "96790 : RI SILICON CENTRAL MALL"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "76792 : RI DUBAI FESTIVAL CITY"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "26862 : RI DALMA MALL"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "24655 : RI MERCATO CENTRE"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "16973 : RI SPRINGS VILLAGE"
- },
- {
-   "Region": "United Arab Emirates",
-   "Store": "27067 : RI AL KHAIL AVENUE MALL-DUBAI"
- }
-]
+{
+   "Bahrain": [
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "76522 : RI MARASSI GALLERIA MALL-BAHRAIN"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "76959 : RI AVENUES MALL-BAHRAIN"
+      }
+   ],
+   "Kuwait": [
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "85133 : RI AVENUE MALL-KUWAIT"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "15036 : RI 360 MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "35895 : RI MARINA MALL-KUWAIT"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "54626 : RI ALKOUT MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "95561 : RI ASSIMA MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "25366 : RI GATE MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "76164 : RI AL KHIRAN MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "16321 : RI THE WAREHOUSE MALL -KUWAIT"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "96617 : RI THE PROMINADE MALL"
+      }
+   ],
+   "Oman": [
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "45013 : RI MALL OF OMAN"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "44654 : RI CITY CENTRE MUSCAT"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "63868 : RI MUSCAT GRAND MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "26883 : RI AVENUE MALL-OMAN"
+      }
+   ],
+   "Qatar": [
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "64653 : RI DOHA FESTIVAL CITY"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "16106 : RI MALL OF QATAR 2"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "15527 : RI VENDOME MALL DOHA"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "34481 : RI VILLAGIO MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "83114 : RI  LAGOONA MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "93919 : RI LANDMARK MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "26479 : RI Doha Mall"
+      }
+   ],
+   "Saudi Arabia": [
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "15492 : RI MALL OF DHAHRAN"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "35494 : RI NAKHEEL MALL-RIYADH"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "35493 : RI HAMRA MALL RIYADH"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "46088 : RI RIYADH PARK MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "75680 : RI KHALEEJ MALL-RIYADH"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "75473 : RI JEDDAH PARK-JEDDAH"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "15474 : RI GALLERIA MALL RIYADH"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "15986 : RI RASHID MALL - ABHA"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "76456 : RI RED SEA MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "76507 : RI THE VILLAGE MALL-JEDDAH"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "46695 : RI RIYADH PARK MALL 2"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "66653 : RI NAKHEEL MALL-DAMMAM"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "25908 : RI GRANADA MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "36681 : RI U WALK-JEDDAH"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "76730 : RI PANORAMA MALL-RIYADH"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "46509 : RI SOLITAIRE MALL-RIYADH"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "56934 : RI MAKKAH MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "36943 : RI MALL OF ARABIA"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "36928 : RI FAISALIAH MALL"
+      }
+   ],
+   "United Arab Emirates": [
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "84939 : RI DUBAI MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "94585 : RI YAS MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "54459 : RI BAWADI MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "34460 : RI MIRDIFF CITY CENTRE"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "61784 : RI MALL OF THE EMIRATES"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "35766 : RI DUBAI HILLS"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "94458 : RI DUBAI OUTLET MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "74541 : RI MARINA MALL-DUBAI"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "21158 : RI MARINA MALL-AXD"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "64457 : RI IBN BATUTA MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "64540 : RI ARABIAN CENTRE"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "24597 : RI WORLD TRADE CENTER-ABU DHABI"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "24559 : RI AJMAN CITY CENTRE"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "16689 : RI AL JIMMI MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "26070 : RI REEM MALL-ABU DHABI"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "36687 : RI DEIRA CITY CENTRE"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "96686 : RI NAKHEEL MALL DUBAI"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "56791 : RI FORSAN CENTRAL MALL-ABU DHABI"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "96790 : RI SILICON CENTRAL MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "76792 : RI DUBAI FESTIVAL CITY"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "26862 : RI DALMA MALL"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "24655 : RI MERCATO CENTRE"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "16973 : RI SPRINGS VILLAGE"
+      },
+      {
+         "44567 : RI CITY CENTRE BAHRAIN": "27067 : RI AL KHAIL AVENUE MALL-DUBAI"
+      }
+   ]
+}
