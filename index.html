@@ -222,17 +222,7 @@
     loadStockCSV();
     loadStoreJSON();
 
-    // Optional: force reload once (hard reload)
-  .then(response => {
-  if (response.ok) {
-    alert("Submitted successfully!");
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
-  } else {
-    alert("Submission failed.");
-  }
-})
+  
 
    
   </script>
