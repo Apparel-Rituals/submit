@@ -266,14 +266,46 @@
   }
 </script>
 
+
+  <script>
+  const form = document.getElementById("uniformForm");
+  const progressBarContainer = document.getElementById("progressBarContainer");
+  const progressBar = document.getElementById("progressBar");
+  const progressText = document.getElementById("progressText");
+
+  form.addEventListener("submit", function (e) {
+    // Show progress bar
+    progressBarContainer.style.display = "block";
+    progressText.textContent = "Submitting...";
+
+    let progress = 0;
+    progressBar.style.width = "0%";
+
+    // Simulate progress filling
+    const interval = setInterval(() => {
+      if (progress < 90) {
+        progress += 10;
+        progressBar.style.width = progress + "%";
+      } else {
+        clearInterval(interval); // stop here and wait for actual submission finish
+      }
+    }, 200);
+  });
+
+  // After your fetch/submit success, set:
+  // progressBar.style.width = "100%";
+  // progressText.textContent = "Submitted Successfully!";
+</script>
+
   
-<!-- Progress Bar -->
-<div id="progressBarContainer" style="display:none; margin-top:20px;">
-  <div style="width:100%; background:#ddd; border-radius:5px;">
-    <div id="progressBar" style="width:0%; height:8px; background-color:#4caf50;"></div>
+<!-- Progress Bar Container -->
+<div id="progressBarContainer" style="display: none; margin-top: 20px;">
+  <div style="width: 100%; background-color: #eee; border-radius: 10px;">
+    <div id="progressBar" style="width: 0%; height: 10px; background-color: #4caf50; border-radius: 10px;"></div>
   </div>
-  <p id="progressStatus" style="font-size:12px; color:#333;">Submitting...</p>
+  <p id="progressText" style="font-size: 12px; color: #555; margin-top: 5px;">Submitting...</p>
 </div>
+
 
   
 </body>
