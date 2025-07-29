@@ -222,12 +222,16 @@
     loadStoreJSON();
 
     // Optional: force reload once (hard reload)
-  window.onload = function () {
-    if (!sessionStorage.getItem("reloaded")) {
-      sessionStorage.setItem("reloaded", "true");
-      location.reload(true);
-    }
-  };
+  .then(response => {
+  if (response.ok) {
+    alert("Submitted successfully!");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  } else {
+    alert("Submission failed.");
+  }
+})
 
    
   </script>
