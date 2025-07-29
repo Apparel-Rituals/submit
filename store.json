@@ -1,6 +1,5 @@
 {
-  { "Region": "Kuwait", "Store": "Kuwait Mall" },
-  { "Region": "UAE", "Store": "Dubai Branch" },
-  { "Region": "UAE", "Store": "Abu Dhabi Branch" },
-  { "Region": "KSA", "Store": "Riyadh Store" }
-]}
+  "Kuwait": ["Salmiya", "Fahaheel"],
+  "UAE": ["Dubai", "Sharjah"],
+  "KSA": ["Riyadh", "Jeddah"]
+}
