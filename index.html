@@ -88,7 +88,7 @@ await fetchAndUpdateStock();
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      await fetchStock();
+      await fetchAndUpdateStock();
       await fetchStores();
 
       document.getElementById('barcode').addEventListener('change', () => {
