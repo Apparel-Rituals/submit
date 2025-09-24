@@ -201,7 +201,7 @@
       const stockItem = stockData.find(i => i.barcode === barcode);
 
       if (!stockItem) return alert("Invalid barcode selected.");
-      if (qty > stockItem.stock) return alert("Insufficient stock.");
+      if (qty > stockItem.stock) return alert("Insufficient stock or Allocation Being Processed.");
 
       const payload = {
         empCode: document.getElementById("empCode").value.trim(),
@@ -310,3 +310,4 @@
   
 </body>
 </html>
+
