@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Prevent caching and force fresh load -->
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
- 
+  <!-- Prevent Cache -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
   <title>Uniform Request Form</title>
+
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -28,7 +30,7 @@
       background: #fff;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
     label {
@@ -37,7 +39,8 @@
       font-weight: bold;
     }
 
-    input, select {
+    input,
+    select {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -68,35 +71,51 @@
       margin-top: 5px;
     }
 
+    #progressBarContainer {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #progressOuter {
+      width: 100%;
+      background-color: #eee;
+      border-radius: 10px;
+    }
+
+    #progressBar {
+      width: 0%;
+      height: 10px;
+      background-color: #4caf50;
+      border-radius: 10px;
+      transition: width 0.3s;
+    }
+
+    #progressText {
+      font-size: 12px;
+      color: #555;
+      margin-top: 5px;
+    }
+
     @media (max-width: 600px) {
       form {
         padding: 15px;
       }
     }
   </style>
-  
-<!--Progessbar-Style-->
-  <style>
-  #progressBarContainer {
-    width: 100%;
-    max-width: 400px;
-    margin: 10px auto;
-  }
-</style>
-
-
-  
 </head>
+
 <body>
 
   <h2>Uniform Request Form</h2>
 
   <form id="uniform-form">
-<title>Uniform Request Form</title>
-    <div style="text-align: center; margin-bottom: 10px;">
-    <img src="https://raw.githubusercontent.com/Apparel-Rituals/uniformrequest/main/logo.png" alt="Ritual Logo" style="max-width: 85px; height: auto;">
-  </div>
-   
+
+    <div style="text-align:center; margin-bottom:10px;">
+      <img src="https://raw.githubusercontent.com/Apparel-Rituals/uniformrequest/main/logo.png"
+        alt="Logo"
+        style="max-width:85px; height:auto;">
+    </div>
+
     <label for="empCode">Employee Code:</label>
     <input type="text" id="empCode" required />
 
@@ -104,8 +123,14 @@
     <input type="text" id="empName" required />
 
     <label for="barcode">Uniform Barcode:</label>
-    <select id="barcode" required></select>
-    <div>Current Stock: <span id="stock-display">-</span></div>
+    <select id="barcode" required>
+      <option value="">Loading...</option>
+    </select>
+
+    <div>
+      Current Stock:
+      <span id="stock-display">-</span>
+    </div>
 
     <label for="qty">Quantity:</label>
     <input type="number" id="qty" min="1" required />
@@ -121,193 +146,269 @@
     </select>
 
     <button type="submit">Submit</button>
+
+    <!-- Progress Bar -->
+    <div id="progressBarContainer">
+
+      <div id="progressOuter">
+        <div id="progressBar"></div>
+      </div>
+
+      <p id="progressText">Submitting...</p>
+
+    </div>
+
   </form>
 
   <script>
-    const stockURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vST2H4FYdTFxPnJQq04pDiTtBA_8lDyJA_Ik7eKt6uVv9XwHTRwgs7UdoDBL_LBiJ6Iq2zZc-vK1BSx/pub?gid=901085179&single=true&output=csv";
-    const scriptURL = "https://script.google.com/macros/s/AKfycbywF8zHLDEpX0TrQT4rkAjUwiTONz4W_DjfdTjWlTmd5ode0M7tDHJkTlAt25lh1f3J/exec";
-    const storeURL = "store.json";
+
+    // STOCK CSV URL
+    const stockURL =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vST2H4FYdTFxPnJQq04pDiTtBA_8lDyJA_Ik7eKt6uVv9XwHTRwgs7UdoDBL_LBiJ6Iq2zZc-vK1BSx/pub?gid=901085179&single=true&output=csv";
+
+    // STORE CSV URL
+    const storeSheetURL =
+      "https://docs.google.com/spreadsheets/d/1P45XukPVP3h768BQQH5F4wk9m2TVbptIqH2ZPKHjt-U/edit?pli=1&gid=1717799572#gid=1717799572";
+
+    // GOOGLE APPS SCRIPT URL
+    const scriptURL =
+      "https://script.google.com/macros/s/AKfycbywF8zHLDEpX0TrQT4rkAjUwiTONz4W_DjfdTjWlTmd5ode0M7tDHJkTlAt25lh1f3J/exec";
 
     const form = document.getElementById("uniform-form");
-    const regionSelect = document.getElementById("region");
-    const storeSelect = document.getElementById("store");
+
     const barcodeSelect = document.getElementById("barcode");
     const stockDisplay = document.getElementById("stock-display");
+
+    const regionSelect = document.getElementById("region");
+    const storeSelect = document.getElementById("store");
+
+    const progressBarContainer = document.getElementById("progressBarContainer");
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
 
     let stockData = [];
     let storeData = {};
 
+    // LOAD STOCK
     async function loadStockCSV() {
-      const res = await fetch(stockURL);
-      const text = await res.text();
-      const lines = text.trim().split("\n").map(row => row.split(","));
-      const header = lines[0].map(h => h.trim());
-      const barcodeIndex = header.indexOf("Barcode");
-      const stockIndex = header.indexOf("Stock");
 
-      stockData = lines.slice(1).map(row => {
-        return {
-          barcode: String(row[barcodeIndex]).trim(),
-          stock: parseInt(row[stockIndex]?.trim()) || 0
-        };
+      const res = await fetch(stockURL + "&t=" + new Date().getTime());
+
+      const text = await res.text();
+
+      const rows = text.trim().split("\n").map(r => r.split(","));
+
+      const headers = rows[0].map(h => h.trim());
+
+      const barcodeIndex = headers.indexOf("Barcode");
+      const stockIndex = headers.indexOf("Stock");
+
+      stockData = [];
+
+      rows.slice(1).forEach(row => {
+
+        stockData.push({
+          barcode: row[barcodeIndex]?.trim(),
+          stock: parseInt(row[stockIndex]) || 0
+        });
+
       });
 
       barcodeSelect.innerHTML = `<option value="">Select Barcode</option>`;
+
       stockData.forEach(item => {
+
         const opt = document.createElement("option");
+
         opt.value = item.barcode;
         opt.textContent = item.barcode;
+
         barcodeSelect.appendChild(opt);
+
       });
+
     }
 
-    async function loadStoreJSON() {
-      const res = await fetch(storeURL);
-      storeData = await res.json();
+    // LOAD REGION & STORE
+    async function loadStoreData() {
+
+      const res = await fetch(storeSheetURL + "&t=" + new Date().getTime());
+
+      const text = await res.text();
+
+      const rows = text.trim().split("\n").map(r => r.split(","));
+
+      const headers = rows[0].map(h => h.trim());
+
+      const regionIndex = headers.indexOf("Region");
+      const storeIndex = headers.indexOf("Store");
+
+      storeData = {};
+
+      rows.slice(1).forEach(row => {
+
+        const region = row[regionIndex]?.trim();
+        const store = row[storeIndex]?.trim();
+
+        if (!region || !store) return;
+
+        if (!storeData[region]) {
+          storeData[region] = [];
+        }
+
+        storeData[region].push(store);
+
+      });
 
       regionSelect.innerHTML = `<option value="">Select Region</option>`;
+
       Object.keys(storeData).forEach(region => {
+
         const opt = document.createElement("option");
+
         opt.value = region;
         opt.textContent = region;
+
         regionSelect.appendChild(opt);
+
       });
+
     }
 
+    // SHOW STOCK
     barcodeSelect.addEventListener("change", () => {
-      const barcode = barcodeSelect.value.trim();
-      const match = stockData.find(item => item.barcode === barcode);
-      stockDisplay.textContent = match ? match.stock : "-";
+
+      const barcode = barcodeSelect.value;
+
+      const item = stockData.find(i => i.barcode === barcode);
+
+      stockDisplay.textContent = item ? item.stock : "-";
+
     });
 
+    // LOAD STORES
     regionSelect.addEventListener("change", () => {
+
       const region = regionSelect.value;
+
       storeSelect.innerHTML = `<option value="">Select Store</option>`;
+
       if (storeData[region]) {
-        const stores = Object.values(storeData[region]).flat();
-        stores.forEach(store => {
+
+        storeData[region].forEach(store => {
+
           const opt = document.createElement("option");
+
           opt.value = store;
           opt.textContent = store;
+
           storeSelect.appendChild(opt);
+
         });
+
       }
+
     });
 
+    // FORM SUBMIT
     form.addEventListener("submit", async (e) => {
+
       e.preventDefault();
-      const barcode = barcodeSelect.value.trim();
+
+      const barcode = barcodeSelect.value;
+
       const qty = parseInt(document.getElementById("qty").value);
+
       const stockItem = stockData.find(i => i.barcode === barcode);
 
-      if (!stockItem) return alert("Invalid barcode selected.");
-      if (qty > stockItem.stock) return alert("Insufficient stock or Allocation Being Processed.");
+      if (!stockItem) {
+        alert("Invalid Barcode");
+        return;
+      }
+
+      if (qty > stockItem.stock) {
+        alert("Insufficient stock or Allocation Being Processed.");
+        return;
+      }
+
+      // SHOW PROGRESS
+      progressBarContainer.style.display = "block";
+
+      progressBar.style.width = "30%";
+
+      progressText.textContent = "Submitting...";
 
       const payload = {
+
         empCode: document.getElementById("empCode").value.trim(),
+
         empName: document.getElementById("empName").value.trim(),
-        barcode,
-        qty,
+
+        barcode: barcode,
+
+        qty: qty,
+
         region: regionSelect.value,
+
         store: storeSelect.value
+
       };
 
       const formData = new FormData();
+
       formData.append("data", JSON.stringify(payload));
 
       try {
-        const res = await fetch(scriptURL, { method: "POST", body: formData });
+
+        progressBar.style.width = "60%";
+
+        const res = await fetch(scriptURL, {
+          method: "POST",
+          body: formData
+        });
+
+        progressBar.style.width = "90%";
+
         const json = await res.json();
 
         if (json.success) {
+
+          progressBar.style.width = "100%";
+
+          progressText.textContent = "Submitted Successfully!";
+
           alert("Form submitted successfully!");
-          await loadStockCSV(); // Refresh updated stock
-          barcodeSelect.value = barcode;
-          barcodeSelect.dispatchEvent(new Event("change")); // Update stock display
-           setTimeout(() => {
-    window.location.reload();
-  }, 1000); // Refresh page after 1 sec
+
+          await loadStockCSV();
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+
         } else {
+
           alert("Error: " + json.message);
+
+          progressBarContainer.style.display = "none";
+
         }
+
       } catch (err) {
+
         alert("Submission failed: " + err.message);
+
+        progressBarContainer.style.display = "none";
+
       }
+
     });
 
-    // Initial Load
+    // INITIAL LOAD
     loadStockCSV();
-    loadStoreJSON();
+    loadStoreData();
 
-  
-
-   
   </script>
-<!---New Script-->
 
-  <script>
-  const form = document.querySelector('form'); // or use #uniformForm if you used id
-
-  if (form) {
-    form.addEventListener('submit', function (e) {
-      document.getElementById("progressBarContainer").style.display = "block";
-      updateProgress(20);
-
-      setTimeout(() => updateProgress(60), 300);
-      setTimeout(() => updateProgress(90), 1000);
-    });
-  }
-
-  function updateProgress(value) {
-    const bar = document.getElementById("progressBar");
-    if (bar) {
-      bar.style.width = value + "%";
-    }
-  }
-</script>
-
-
-  <script>
-  const form = document.getElementById("uniformForm");
-  const progressBarContainer = document.getElementById("progressBarContainer");
-  const progressBar = document.getElementById("progressBar");
-  const progressText = document.getElementById("progressText");
-
-  form.addEventListener("submit", function (e) {
-    // Show progress bar
-    progressBarContainer.style.display = "block";
-    progressText.textContent = "Submitting...";
-
-    let progress = 0;
-    progressBar.style.width = "0%";
-
-    // Simulate progress filling
-    const interval = setInterval(() => {
-      if (progress < 90) {
-        progress += 10;
-        progressBar.style.width = progress + "%";
-      } else {
-        clearInterval(interval); // stop here and wait for actual submission finish
-      }
-    }, 200);
-  });
-
-  // After your fetch/submit success, set:
-  // progressBar.style.width = "100%";
-  // progressText.textContent = "Submitted Successfully!";
-</script>
-
-  
-<!-- Progress Bar Container -->
-<div id="progressBarContainer" style="display: none; margin-top: 20px;">
-  <div style="width: 100%; background-color: #eee; border-radius: 10px;">
-    <div id="progressBar" style="width: 0%; height: 10px; background-color: #4caf50; border-radius: 10px;"></div>
-  </div>
-  <p id="progressText" style="font-size: 12px; color: #555; margin-top: 5px;">Submitting...</p>
-</div>
-
-
-  
 </body>
-</html>
 
+</html>
