@@ -318,9 +318,9 @@
       const barcode = barcodeSelect.value;
 
       const qty = parseInt(document.getElementById("qty").value);
-      if (qty > 2) {
-  alert("Maximum 2 Quantity Allowed.");
-  return;
+
+      if (qty > 2) { alert("Maximum 2 Quantity Allowed."); return; }
+
       const stockItem = stockData.find(i => i.barcode === barcode);
 
       if (!stockItem) {
