@@ -122,6 +122,9 @@
     <label for="empName">Employee Name:</label>
     <input type="text" id="empName" required />
 
+    <label for="contact">Store Contact Number:</label> 
+    <input type="text" id="contact" maxlength="15" placeholder="Enter WhatsApp / Mobile Number, We can Contact You, In case of any Descrepency" required />
+    
     <label for="barcode">Uniform Barcode:</label>
     <select id="barcode" required>
       <option value="">Loading...</option>
@@ -345,6 +348,8 @@
         empCode: document.getElementById("empCode").value.trim(),
 
         empName: document.getElementById("empName").value.trim(),
+
+        contact: document.getElementById("contact").value.trim(),
 
         barcode: barcode,
 
