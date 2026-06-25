@@ -133,7 +133,7 @@
     </div>
 
     <label for="qty">Quantity:</label>
-    <input type="number" id="qty" min="1" required />
+    <input type="number" id="qty" min="1" max="2" required />
 
     <label for="region">Region:</label>
     <select id="region" required>
@@ -318,7 +318,9 @@
       const barcode = barcodeSelect.value;
 
       const qty = parseInt(document.getElementById("qty").value);
-
+      if (qty > 2) {
+  alert("Maximum 2 Quantity Allowed.");
+  return;
       const stockItem = stockData.find(i => i.barcode === barcode);
 
       if (!stockItem) {
